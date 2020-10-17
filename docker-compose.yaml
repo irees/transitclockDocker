@@ -1,0 +1,29 @@
+version: "3"
+
+volumes:
+  pgdata:
+
+services:
+  db:
+    restart: always
+    image: postgres:9.6
+    env_file:
+      - ./test.env  
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432"
+
+  tc:
+    build:
+      context: .
+    command: init.sh # start_transitclock.sh
+    env_file:
+      - ./test.env
+    volumes:
+      - ./config/transitclock.properties:/usr/local/transitclock/config/transitclock.properties
+      - ./config/postgres_hibernate.cfg.xml:/usr/local/transitclock/config/hibernate.cfg.xml
+      - ./logs:/usr/local/transitclock/logs/ 
+      - ./ehcache:/usr/local/transitclock/cache/ 
+    links:
+      - db
