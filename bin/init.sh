@@ -1,4 +1,5 @@
 #!/bin/sh
+set -x
 check_db_up.sh
 create_tables.sh
 import_gtfs.sh

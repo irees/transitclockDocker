@@ -7,6 +7,7 @@ services:
   db:
     restart: always
     image: postgres:9.6
+    command: "-c logging_collector=on"
     env_file:
       - ./test.env  
     volumes:
@@ -18,12 +19,13 @@ services:
     build:
       context: .
       dockerfile: dockerfile.compose
-    command: init.sh # start_transitclock.sh
+    command: start_transitclock.sh
+    # command: init.sh
     env_file:
       - ./test.env
     volumes:
-      - ./config/transitclock.properties:/usr/local/transitclock/config/transitclock.properties
-      - ./config/postgres_hibernate.cfg.xml:/usr/local/transitclock/config/hibernate.cfg.xml
+      # - ./config/transitclock.properties:/usr/local/transitclock/config/transitclock.properties
+      # - ./config/postgres_hibernate.cfg.xml:/usr/local/transitclock/config/hibernate.cfg.xml
       - ./logs:/usr/local/transitclock/logs/ 
       - ./ehcache:/usr/local/transitclock/cache/ 
     links:
