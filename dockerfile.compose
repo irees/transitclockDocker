@@ -1,18 +1,6 @@
 FROM maven:3.6-jdk-8
 MAINTAINER Nathan Walker <nathan@rylath.net>, Sean Óg Crudden <og.crudden@gmail.com>
 
-ARG AGENCYID="1"
-ARG AGENCYNAME="GOHART"
-ARG GTFS_URL="http://gohart.org/google/google_transit.zip"
-ARG GTFSRTVEHICLEPOSITIONS="http://realtime.prod.obahart.org:8088/vehicle-positions"
-ARG TRANSITCLOCK_PROPERTIES="config/transitclock.properties"
-
-ENV AGENCYID ${AGENCYID}
-ENV AGENCYNAME ${AGENCYNAME}
-ENV GTFS_URL ${GTFS_URL}
-ENV GTFSRTVEHICLEPOSITIONS ${GTFSRTVEHICLEPOSITIONS}
-ENV TRANSITCLOCK_PROPERTIES ${TRANSITCLOCK_PROPERTIES}
-
 ENV TRANSITCLOCK_CORE /transitclock-core
 
 RUN apt-get update \
@@ -34,9 +22,6 @@ RUN set -x \
 	&& tar -xvf tomcat.tar.gz --strip-components=1 \
 	&& rm bin/*.bat \
 	&& rm tomcat.tar.gz*
-
-EXPOSE 8080
-
 
 # Install json parser so we can read API key for CreateAPIKey output
 
@@ -71,21 +56,7 @@ RUN mv api.war  /usr/local/tomcat/webapps
 RUN mv web.war  /usr/local/tomcat/webapps
 
 # Scripts required to start transiTime.
-ADD bin/check_db_up.sh /usr/local/transitclock/bin/check_db_up.sh
-ADD bin/generate_sql.sh /usr/local/transitclock/bin/generate_sql.sh
-ADD bin/create_tables.sh /usr/local/transitclock/bin/create_tables.sh
-ADD bin/create_api_key.sh /usr/local/transitclock/bin/create_api_key.sh
-ADD bin/create_webagency.sh /usr/local/transitclock/bin/create_webagency.sh
-ADD bin/import_gtfs.sh /usr/local/transitclock/bin/import_gtfs.sh
-ADD bin/start_transitclock.sh /usr/local/transitclock/bin/start_transitclock.sh
-ADD bin/get_api_key.sh /usr/local/transitclock/bin/get_api_key.sh
-ADD bin/import_avl.sh /usr/local/transitclock/bin/import_avl.sh
-ADD bin/process_avl.sh /usr/local/transitclock/bin/process_avl.sh
-ADD bin/update_traveltimes.sh /usr/local/transitclock/bin/update_traveltimes.sh
-ADD bin/set_config.sh /usr/local/transitclock/bin/set_config.sh
-
-# Handy utility to allow you connect directly to database
-ADD bin/connect_to_db.sh /usr/local/transitclock/bin/connect_to_db.sh
+ADD bin/*.sh /usr/local/transitclock/bin/
 
 ENV PATH="/usr/local/transitclock/bin:${PATH}"
 
@@ -96,9 +67,6 @@ ADD data/gtfs_hart_old.zip /usr/local/transitclock/data/gtfs_hart_old.zip
 RUN \
 	sed -i 's/\r//' /usr/local/transitclock/bin/*.sh &&\
  	chmod 777 /usr/local/transitclock/bin/*.sh
-
-ADD config/postgres_hibernate.cfg.xml /usr/local/transitclock/config/hibernate.cfg.xml
-ADD ${TRANSITCLOCK_PROPERTIES} /usr/local/transitclock/config/transitclock.properties
 
 # This adds the transitime configs to test.
 ADD config/test/* /usr/local/transitclock/config/test/
