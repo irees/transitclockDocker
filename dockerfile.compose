@@ -1,5 +1,4 @@
 FROM maven:3.6-jdk-8
-MAINTAINER Nathan Walker <nathan@rylath.net>, Sean Óg Crudden <og.crudden@gmail.com>
 
 ENV TRANSITCLOCK_CORE /transitclock-core
 
@@ -43,8 +42,8 @@ RUN mkdir /usr/local/transitclock/test/config
 
 WORKDIR /usr/local/transitclock
 
-RUN  curl -s https://api.github.com/repos/TheTransitClock/transitime/releases/latest | jq -r ".assets[].browser_download_url" | grep 'Core.jar\|api.war\|web.war' | xargs -L1 wget
-
+# RUN  curl -s https://api.github.com/repos/TheTransitClock/transitime/releases/latest | jq -r ".assets[].browser_download_url" | grep 'Core.jar\|api.war\|web.war' | xargs -L1 wget
+ADD target/Core.jar target/api.war target/web.war /usr/local/transitclock/
 #ADD transitime/transitclockWebapp/target/web.war /usr/local/transitclock/
 #ADD transitime/transitclockApi/target/api.war /usr/local/transitclock/
 #ADD transitime/transitclock/target/Core.jar /usr/local/transitclock/
