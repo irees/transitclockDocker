@@ -10,10 +10,10 @@ psql \
 	-p "$DBPORT" \
 	-U postgres \
 	-d $AGENCYNAME \
-	-f /usr/local/transitclock/db/ddl_postgres_org_transitclock_db_structs.sql
+	-f /usr/local/transitclock/db/ddl_postgres_*_db_structs.sql
 psql \
 	-h "$DBHOST" \
 	-p "$DBPORT" \
 	-U postgres \
 	-d $AGENCYNAME \
-	-f /usr/local/transitclock/db/ddl_postgres_org_transitclock_db_webstructs.sql
+	-f /usr/local/transitclock/db/ddl_postgres_*_db_webstructs.sql
