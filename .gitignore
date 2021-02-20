@@ -1,1 +1,4 @@
 *.iml
+logs
+ehcache
+target
